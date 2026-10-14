@@ -1,0 +1,64 @@
+﻿@model B2BOdev.Models.Kategori
+<form asp-action="EditPartial" method="post" id="editBirimForm">
+
+    <input type="hidden" asp-for="KategoriId" />
+
+    <div class="mb-3">
+        <label asp-for="KategoriAd" class="form-label"></label>
+        <input asp-for="KategoriAd" class="form-control" />
+        <span asp-validation-for="KategoriAd" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="UstKategoriId">Üst Kategori</label>
+        <select asp-for="UstKategoriId" class="form-control" asp-items="ViewBag.UstKategoriler">
+            <option value="">Ana Kategori (Yok)</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="KategoriTip" class="form-label"></label>
+        <input asp-for="KategoriTip" class="form-control" />
+        <span asp-validation-for="KategoriTip" class="text-danger"></span>
+    </div>
+
+    <div class="text-end">
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $(document).ready(function () {
+            $('#editKategoriForm').submit(function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+
+                $.ajax({
+                    type: "POST",
+                    url: form.attr("action"),
+                    data: form.serialize(),
+                    success: function (result) {
+                        if (result.success) {
+                            // Başarılıysa modalı kapat
+                            $('#editModal').modal('hide');
+
+                            // Liste yenilensin veya başarılı mesaj göster
+                            location.reload(); // İsteğe göre özelleştirilebilir
+                        } else {
+                            // Hatalıysa dönen partialView'i tekrar moda yerleştir
+                            $('#editModalBody').html(result);
+                        }
+                    },
+                    error: function () {
+                        alert("Bir hata oluştu.");
+                    }
+                });
+            });
+        });
+    </script>
+}

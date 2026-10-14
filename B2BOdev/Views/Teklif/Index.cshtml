@@ -1,0 +1,40 @@
+﻿@model IEnumerable<B2BOdev.Models.Teklif>
+
+@{
+    ViewData["Title"] = "Teklifler"; var personelYetki = Context.Session.GetString("Personel");
+}
+
+<h2>Teklifler Listesi</h2>
+@if (personelYetki == "1")
+{
+    <a href="@Url.Action("Create", "Teklif")" class="btn btn-success">
+        <i class="fas fa-plus"></i> Yeni Teklif Ekle
+    </a>
+}
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Teklif ID</th>
+            <th>Firma</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+            <th>Açıklama</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TeklifID</td>
+                <td>@item.Firma.FirmaUnvanı</td>
+                <td>@item.Tarih.ToShortDateString()</td>
+                <td>@item.Durum</td>
+                <td>@item.Aciklama</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Teklif", new { id = item.TeklifID })" class="btn btn-primary btn-sm">Düzenle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,36 @@
+﻿@model B2BOdev.Models.Kategori
+
+@{
+    ViewData["Title"] = "Kategori Düzenle";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="KategoriId
+" />
+
+
+
+    <div class="form-group">
+        <label asp-for="KategoriAd">Kategori Ad</label>
+        <input asp-for="KategoriAd" class="form-control" />
+        <span asp-validation-for="KategoriAd" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="KategoriTip">KAtegori Tip</label>
+        <input asp-for="KategoriTip" class="form-control" />
+        <span asp-validation-for="KategoriTip" class="text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

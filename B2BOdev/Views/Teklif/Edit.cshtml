@@ -1,0 +1,103 @@
+﻿@model B2BOdev.Models.Teklif
+
+@{
+    ViewData["Title"] = "Teklif Düzenle";
+    var personelYetki = Context.Session.GetString("Personel");
+}
+
+<h2>Teklif Düzenle – #@Model.TeklifID</h2>
+ @if (personelYetki == "1")
+{
+    <a href="@Url.Action("Create", "Teklif")" class="btn btn-success">
+        <i class="fas fa-plus"></i> Yeni Teklif Ekle
+        </a>}
+<div class="mb-3">
+    <strong>Firma:</strong> @Model.Firma.FirmaUnvanı <br />
+    <strong>Tarih:</strong> @Model.Tarih.ToShortDateString() <br />
+    <strong>Durum:</strong> @Model.Durum <br />
+    <strong>Açıklama:</strong> @Model.Aciklama
+</div>
+
+<hr />
+
+<h4>Malzeme Ekle</h4>
+<form asp-action="AddDetay" method="post">
+    <input type="hidden" name="TeklifID" value="@Model.TeklifID" />
+
+    <div class="form-row d-flex flex-wrap gap-3 align-items-end">
+        <div class="form-group">
+            <label>Malzeme</label>
+            <select name="MalzemeID" class="form-control" required asp-items="ViewBag.Malzemeler"></select>
+        </div>
+        <div class="form-group">
+            <label>Miktar</label>
+            <input type="number" name="Miktar" class="form-control" required min="1" />
+        </div>
+        <div class="form-group">
+            <label>Birim Fiyat</label>
+            <input type="number" name="BirimFiyat" step="0.01" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label>Birim</label>
+            <select name="BirimId" class="form-control" asp-items="ViewBag.Birimler" required></select>
+        </div>
+        <div class="form-group">
+            <label>KDV (%)</label>
+            <input type="number" name="Kdv" step="0.01" class="form-control" required   />
+        </div>
+        <div class="form-group">
+            <label>İndirim Oranı (0-1)</label>
+            <input type="number" name="IndOran"   class="form-control" required   />
+        </div>
+        <div>
+            <button type="submit" class="btn btn-success">Ekle</button>
+        </div>
+    </div>
+</form>
+
+<hr />
+
+<h4>Eklenen Malzemeler</h4>
+<table class="table table-bordered table-sm">
+    <thead class="thead-light">
+        <tr>
+            <th>Malzeme</th>
+            <th>Birim</th>
+            <th>Miktar</th>
+            <th>Birim Fiyat</th>
+            <th>İnd. Oran</th>
+            <th>İnd. Tutar</th>
+            <th>Toplam</th>
+            <th>KDV</th>
+            <th>Genel Toplam</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TeklifDetaylari)
+        {
+            <tr>
+                <td>@item.Malzeme.MalzemeAd</td>
+                <td>@item.Birim?.BirimAd</td>
+                <td>@item.Miktar</td>
+                <td>@item.BirimFiyat.ToString("C")</td>
+                <td>@(item.IndOran ) %</td>
+                <td>@item.IndTutar.ToString("C")</td>
+                <td>@item.Toplam.ToString("C")</td>
+                <td>@item.ToplamKdv.ToString("C")</td>
+                <td>@item.GenelToplam.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="mt-4">
+    <a href="/Teklif/Index" class="btn btn-secondary">Teklifi Tamamla</a>
+</div>
+
+@if (personelYetki == "1")
+{
+    <form asp-action="SipariseCevir" method="post" asp-controller="Teklif">
+        <input type="hidden" name="id" value="@Model.TeklifID" />
+        <button type="submit" class="btn btn-warning mt-3">Siparişe Çevir</button>
+    </form>
+}

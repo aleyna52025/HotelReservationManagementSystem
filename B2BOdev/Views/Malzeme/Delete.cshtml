@@ -1,0 +1,30 @@
+﻿@model B2BOdev.Models.Malzeme
+
+@{
+    ViewData["Title"] = "Malzeme Sil";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="alert alert-danger">
+    <h4>Silmek istediğinize emin misiniz?</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Malzeme Kodu</dt>
+        <dd class="col-sm-10">@Model.MalzemeKod</dd>
+
+        <dt class="col-sm-2">Malzeme Adı</dt>
+        <dd class="col-sm-10">@Model.MalzemeAd</dd>
+
+        <dt class="col-sm-2">Marka</dt>
+        <dd class="col-sm-10">@Model.Marka?.MarkaAd</dd>
+
+        <dt class="col-sm-2">Kategori</dt>
+        <dd class="col-sm-10">@Model.Kategori?.KategoriAd</dd>
+    </dl>
+
+    <form asp-action="Delete" asp-route-id="@Model.MalzemeId" method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">Sil</button>
+        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+    </form>
+</div>

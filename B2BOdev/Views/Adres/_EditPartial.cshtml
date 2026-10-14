@@ -1,0 +1,55 @@
+﻿@model B2BOdev.Models.Adres
+
+<div class="modal-header">
+    <h5 class="modal-title">Adres Bilgisi</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<form id="editAdresForm">
+    <div class="modal-body">
+        <input type="hidden" name="AdresID" value="@Model.AdresID" />
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Adres 1</label>
+                <input name="Adres1" class="form-control" value="@Model.Adres1" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Adres 2</label>
+                <input name="Adres2" class="form-control" value="@Model.Adres2" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>İl</label>
+                <select name="Ilid" class="form-control" asp-items="ViewBag.Ilid"></select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>İlçe</label>
+                <select name="Ilceid" class="form-control" asp-items="ViewBag.Ilceid"></select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Mahalle</label>
+                <input name="Mahalle" class="form-control" value="@Model.Mahalle" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Telefon</label>
+                <input name="Tel" class="form-control" value="@Model.Tel" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Fax</label>
+                <input name="Fax" class="form-control" value="@Model.Fax" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Cep Tel</label>
+                <input name="CepTel" class="form-control" value="@Model.CepTel" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Firma</label>
+                <select name="FirmaId" class="form-control" asp-items="ViewBag.FirmaId"></select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </div>
+</form>

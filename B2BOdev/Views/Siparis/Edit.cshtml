@@ -1,0 +1,111 @@
+﻿@model B2BOdev.Models.Siparis
+
+@{
+    ViewData["Title"] = "Sipariş Düzenle";
+}
+
+<h2>Sipariş Düzenle</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="SipID" />
+
+    <div class="form-group">
+        <label asp-for="FirmaId"></label>
+        <select asp-for="FirmaId" class="form-control" asp-items="@(new SelectList(ViewBag.Firmalar, "FirmaID", "FirmaUnvanı"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DurumID"></label>
+        <select asp-for="DurumID" class="form-control" asp-items="@(new SelectList(ViewBag.Durumlar, "durumId", "durumu"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="teslimatadresıd"></label>
+        <select asp-for="teslimatadresıd" class="form-control" asp-items="@(new SelectList(ViewBag.Adresler, "AdresID", "Adres1"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SipNo"></label>
+        <input asp-for="SipNo" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Tarih"></label>
+        <input asp-for="Tarih" class="form-control" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Aciklama"></label>
+        <textarea asp-for="Aciklama" class="form-control"></textarea>
+    </div>
+
+    <hr />
+
+    <h4>Sipariş Detayları</h4>
+
+    @if (Model.SiparisDetay != null && Model.SiparisDetay.Any())
+    {
+        for (int i = 0; i < Model.SiparisDetay.Count; i++)
+        {
+            <div class="border p-3 mb-3">
+                <input type="hidden" name="SiparisDetay[@i].SipDetID" value="@Model.SiparisDetay.ElementAt(i).SipDetID" />
+
+                <div class="form-group">
+                    <label>Malzeme</label>
+                    <select name="SiparisDetay[@i].MalzemeID" class="form-control" asp-items="@(new SelectList(ViewBag.Malzemeler, "MalzemeId", "MalzemeAd", Model.SiparisDetay.ElementAt(i).MalzemeID))"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Birim</label>
+                    <select name="SiparisDetay[@i].BirimId" class="form-control" asp-items="@(new SelectList(ViewBag.Birimler, "BirimID", "BirimAd", Model.SiparisDetay.ElementAt(i).BirimId))"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Miktar</label>
+                    <input name="SiparisDetay[@i].Miktar" class="form-control" value="@Model.SiparisDetay.ElementAt(i).Miktar" />
+                </div>
+
+                <div class="form-group">
+                    <label>Fiyat</label>
+                    <input name="SiparisDetay[@i].Fiyat" class="form-control" value="@Model.SiparisDetay.ElementAt(i).Fiyat" />
+                </div>
+
+                <div class="form-group">
+                    <label>Kdv</label>
+                    <input name="SiparisDetay[@i].Kdv" class="form-control" value="@Model.SiparisDetay.ElementAt(i).Kdv" />
+                </div>
+
+                <div class="form-group">
+                    <label>IndOran</label>
+                    <input name="SiparisDetay[@i].IndOran" class="form-control" value="@Model.SiparisDetay.ElementAt(i).IndOran" />
+                </div>
+
+                <div class="form-group">
+                    <label>IndTutar</label>
+                    <input name="SiparisDetay[@i].IndTutar" class="form-control" value="@Model.SiparisDetay.ElementAt(i).IndTutar" />
+                </div>
+
+                <div class="form-group">
+                    <label>Toplam</label>
+                    <input name="SiparisDetay[@i].Toplam" class="form-control" value="@Model.SiparisDetay.ElementAt(i).Toplam" />
+                </div>
+
+                <div class="form-group">
+                    <label>ToplamKdv</label>
+                    <input name="SiparisDetay[@i].ToplamKdv" class="form-control" value="@Model.SiparisDetay.ElementAt(i).ToplamKdv" />
+                </div>
+
+                <div class="form-group">
+                    <label>GenelToplam</label>
+                    <input name="SiparisDetay[@i].GenelToplam" class="form-control" value="@Model.SiparisDetay.ElementAt(i).GenelToplam" />
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Henüz sipariş detayı yok.</p>
+    }
+
+    <button type="submit" class="btn btn-primary mt-3">Güncelle</button>
+</form>

@@ -1,0 +1,27 @@
+﻿@model B2BOdev.Models.Kategori
+
+@{
+    ViewData["Title"] = "Kategori Sil";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Bu Kategoriyi silmek istediğinize emin misiniz?</h3>
+
+<div>
+    <h4>@Model.KategoriAd</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Kategori Adı</dt>
+        <dd class="col-sm-10">@Model.KategoriAd</dd>
+
+        <dt class="col-sm-2">KAtegori Tipi</dt>
+        <dd class="col-sm-10">@Model.KategoriTip</dd>
+ 
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="get">
+        <input type="hidden" asp-for="KategoriId" />
+        <button type="submit" class="btn btn-danger">Sil</button>
+        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+    </form>
+</div>

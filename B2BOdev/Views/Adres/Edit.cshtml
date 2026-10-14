@@ -1,0 +1,64 @@
+﻿@model B2BOdev.Models.Adres
+
+@{
+    ViewData["Title"] = "Adres Güncelle";
+}
+
+<h2 class="text-primary mb-4">Adres Güncelle</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="AdresID" />
+
+    <div class="form-group">
+        <label asp-for="Adres1"></label>
+        <input asp-for="Adres1" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Adres2"></label>
+        <input asp-for="Adres2" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Ilid"></label>
+        <select asp-for="Ilid" asp-items="ViewBag.Ilid" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Ilceid"></label>
+        <select asp-for="Ilceid" asp-items="ViewBag.Ilceid" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Mahalle"></label>
+        <input asp-for="Mahalle" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Tel"></label>
+        <input asp-for="Tel" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Fax"></label>
+        <input asp-for="Fax" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CepTel"></label>
+        <input asp-for="CepTel" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Del"></label>
+        <input asp-for="Del" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FirmaId"></label>
+        <select asp-for="FirmaId" asp-items="ViewBag.FirmaId" class="form-control"></select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

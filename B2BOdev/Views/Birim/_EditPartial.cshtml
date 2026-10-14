@@ -1,0 +1,25 @@
+﻿@model B2BOdev.Models.Birim
+
+<form asp-action="EditPartial" method="post" id="editBirimForm">
+    <input type="hidden" asp-for="BirimID" />
+    <div class="mb-3">
+        <label asp-for="BirimAd" class="form-label"></label>
+        <input asp-for="BirimAd" class="form-control" />
+        <span asp-validation-for="BirimAd" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BirimKod" class="form-label"></label>
+        <input asp-for="BirimKod" class="form-control" />
+        <span asp-validation-for="BirimKod" class="text-danger"></span>
+    </div>
+
+    <div class="text-end">
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,30 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+
+## Visual Studio
+.vs/
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+## NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+## Rider / VS Code
+.idea/
+.vscode/
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Logs
+*.log

@@ -1,0 +1,33 @@
+﻿@model B2BOdev.Models.Birim
+
+@{
+    ViewData["Title"] = "Birim Düzenle";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="BirimID" />
+
+    <div class="form-group">
+        <label asp-for="BirimAd" class="control-label"></label>
+        <input asp-for="BirimAd" class="form-control" />
+        <span asp-validation-for="BirimAd" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BirimKod" class="control-label"></label>
+        <input asp-for="BirimKod" class="form-control" />
+        <span asp-validation-for="BirimKod" class="text-danger"></span>
+    </div>
+     
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

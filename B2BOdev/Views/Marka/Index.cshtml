@@ -1,0 +1,131 @@
+﻿@model IEnumerable<B2BOdev.Models.Marka>
+@{
+    ViewData["Title"] = "Markalar";
+}
+@{
+    var userName = Context.Session.GetString("UserName"); 
+    var personelYetki = Context.Session.GetString("Personel");
+}
+<br />
+<br />
+ 
+    <div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control w-50" placeholder="marka Adı Girin." />
+        
+    </div>
+
+      @if (personelYetki == "1")
+{
+      <a href="#" class="btn btn-sm btn-warning edit-birim-btn"
+                   data-url="@Url.Action("EditPartial", "Marka", new { id = 0})">
+                            yeni
+                        </a>
+}
+    <h2 class="text-center">Marka Listesi</h2>
+<table class="table table-striped table-bordered" id="markatablo">
+        <thead class="table-dark">
+            <tr>
+                <th>Marka Adı</th>
+
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var marka in Model)
+            {
+                <tr>
+                    <td>@marka.MarkaAd</td>
+                      @if (personelYetki == "1")
+{
+                    <td>
+                       <a href="#" class="btn btn-sm btn-warning edit-birim-btn"
+                   data-url="@Url.Action("EditPartial", "Marka", new { id = marka.MarkaID})">
+                            Düzenle
+                        </a> <a href="@Url.Action("DeleteConfirmed", "Marka", new { id = marka.MarkaID})" class="btn btn-sm btn-danger">Sil</a>
+                    </td>
+}
+                </tr>
+            }
+        </tbody>
+    </table>
+    <!-- Modal -->
+<div class="modal fade" id="editMarkaModal" tabindex="-1" aria-labelledby="editBirimModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBirimModalLabel">Marka Düzenle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- PartialView buraya ajax ile gelecek -->
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            var input = this.value.toLowerCase();
+            var rows = document.querySelectorAll("#markatablo tbody tr");
+
+            rows.forEach(function (row) {
+                var markaad = row.children[0].textContent.toLowerCase();
+
+
+                if (markaad.includes(input) ) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+
+
+
+        //js kodları modul
+        document.querySelectorAll(".edit-birim-btn").forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                const url = this.getAttribute("data-url");
+
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById("modalContent").innerHTML = html;
+                        const modal = new bootstrap.Modal(document.getElementById("editMarkaModal"));
+                        modal.show();
+
+                        setTimeout(() => {
+                            bindEditFormSubmit();
+                        }, 100);
+                    });
+            });
+        });
+
+        function bindEditFormSubmit() {
+            const form = document.getElementById("editMarkaForm");
+            if (!form) return;
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert("Bir hata oluştu.");
+                        }
+                    });
+            });
+        }
+    </script>
+ }

@@ -1,0 +1,32 @@
+﻿@model B2BOdev.Models.Firma
+
+@{
+    ViewData["Title"] = "Firma Sil";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Bu firmayı silmek istediğinize emin misiniz?</h3>
+
+<div>
+    <h4>@Model.FirmaUnvanı</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Firma Kodu</dt>
+        <dd class="col-sm-10">@Model.FirmaKod</dd>
+
+        <dt class="col-sm-2">Vergi No</dt>
+        <dd class="col-sm-10">@Model.VergiNo</dd>
+
+        <dt class="col-sm-2">Vergi Dairesi</dt>
+        <dd class="col-sm-10">@Model.VergiDairesi</dd>
+
+        <dt class="col-sm-2">E-Posta</dt>
+        <dd class="col-sm-10">@Model.Eposta</dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="get">
+        <input type="hidden" asp-for="FirmaID" />
+        <button type="submit" class="btn btn-danger">Sil</button>
+        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+    </form>
+</div>

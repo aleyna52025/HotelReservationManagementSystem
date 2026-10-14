@@ -1,0 +1,118 @@
+﻿@{
+    
+    var personelYetki = Context.Session.GetString("Personel");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - B2BOdev</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/B2BOdev.styles.css" asp-append-version="true" />
+    <style>
+        /* Yan navbar özel stiller */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background-color: #343a40;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 56px; /* Navbar yüksekliği kadar boşluk */
+            overflow-y: auto;
+        }
+
+            .sidebar .nav-link {
+                color: white;
+            }
+
+                .sidebar .nav-link:hover,
+                .sidebar .nav-link.active {
+                    background-color: #495057;
+                    color: white;
+                }
+
+        .content-wrapper {
+            margin-left: 220px; /* Sidebar genişliği kadar boşluk */
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    
+      @if (personelYetki == "0")
+        {
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Siparis" asp-action="Index">Sipariş</a>
+        </li>
+    }
+    else
+    {
+        
+    
+    <!-- Yan Navbar -->
+    <nav class="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Birim" asp-action="Index">Birim</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Durum" asp-action="Index">Sevk Bilgileri</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Firma" asp-action="Index">Firma</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Kategori" asp-action="Index">Kategori</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Malzeme" asp-action="Index">Malzeme</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Marka" asp-action="Index">Marka</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Siparis" asp-action="Index">Sipariş</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Adres" asp-action="Index">Adres</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Dashboard" asp-action="Index">Rapor</a>
+            </li>
+
+           
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="User" asp-action="Index">User </a>
+            </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="User" asp-action="Login">Çıkış </a>
+                </li>
+
+        </ul>
+    </nav>
+    }
+    <!-- Ana İçerik -->
+    <div class="content-wrapper">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - B2BOdev - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿@model B2BOdev.Models.Durum
+
+<form asp-action="EditPartial" method="post" id="editDurumForm">
+    <input type="hidden" asp-for="durumId" />
+    <div class="mb-3">
+        <label asp-for="durumu" class="form-label"></label>
+        <input asp-for="durumu" class="form-control" />
+        <span asp-validation-for="durumu" class="text-danger"></span>
+    </div>
+
+
+    <div class="text-end">
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

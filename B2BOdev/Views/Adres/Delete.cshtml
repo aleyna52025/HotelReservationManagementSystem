@@ -1,0 +1,30 @@
+﻿@model B2BOdev.Models.Adres
+
+@{
+    ViewData["Title"] = "Adres Sil";
+}
+
+<h2 class="text-danger mb-4">Adresi Sil</h2>
+
+<h4>Bu adresi silmek istediğinize emin misiniz?</h4>
+<div class="border p-3 mb-3">
+    <dl class="row">
+        <dt class="col-sm-3">Adres</dt>
+        <dd class="col-sm-9">@Model.Adres1, @Model.Adres2</dd>
+
+        <dt class="col-sm-3">İl</dt>
+        <dd class="col-sm-9">@Model.Il?.IlAdi</dd>
+
+        <dt class="col-sm-3">İlçe</dt>
+        <dd class="col-sm-9">@Model.Ilce?.IlceAdi</dd>
+
+        <dt class="col-sm-3">Firma</dt>
+        <dd class="col-sm-9">@Model.firma?.FirmaUnvanı</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="AdresID" />
+    <button type="submit" class="btn btn-danger">Sil</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

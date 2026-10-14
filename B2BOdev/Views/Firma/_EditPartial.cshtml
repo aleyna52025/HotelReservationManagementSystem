@@ -1,0 +1,118 @@
+﻿@model B2BOdev.Models.Firma
+
+<div class="modal-header bg-primary text-white">
+    <h5 class="modal-title">@(Model.FirmaID > 0 ? "Firma Düzenle" : "Yeni Firma Ekle")</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+</div>
+
+<form id="editFirmaForm" asp-action="EditPartial" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="FirmaID" />
+
+    <div class="modal-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <!-- Firma Kodu -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="FirmaKod" class="form-label"></label>
+                <input asp-for="FirmaKod" class="form-control" />
+                <span asp-validation-for="FirmaKod" class="text-danger"></span>
+            </div>
+
+            <!-- Firma Unvanı -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="FirmaUnvanı" class="form-label"></label>
+                <input asp-for="FirmaUnvanı" class="form-control" />
+                <span asp-validation-for="FirmaUnvanı" class="text-danger"></span>
+            </div>
+
+            <!-- Vergi No -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="VergiNo" class="form-label"></label>
+                <input asp-for="VergiNo" class="form-control" />
+                <span asp-validation-for="VergiNo" class="text-danger"></span>
+            </div>
+
+            <!-- Vergi Dairesi -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="VergiDairesi" class="form-label"></label>
+                <input asp-for="VergiDairesi" class="form-control" />
+                <span asp-validation-for="VergiDairesi" class="text-danger"></span>
+            </div>
+
+            <!-- Telefon -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="tel" class="form-label"></label>
+                <input asp-for="tel" class="form-control" type="tel" />
+                <span asp-validation-for="tel" class="text-danger"></span>
+            </div>
+
+            <!-- E-Posta -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Eposta" class="form-label"></label>
+                <input asp-for="Eposta" class="form-control" type="email" />
+                <span asp-validation-for="Eposta" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+        <button type="submit" class="btn btn-primary" id="btnKaydet">
+            <span class="submit-text">Kaydet</span>
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+            $('#editFirmaForm').on('submit', function (e) {
+                e.preventDefault();
+
+                if (!$(this).valid()) return false;
+
+                var $btn = $('#btnKaydet');
+                $btn.prop('disabled', true);
+                $btn.find('.submit-text').text('Kaydediliyor...');
+                $btn.find('.spinner-border').removeClass('d-none');
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#editFirmaModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert(response.message || "İşlem başarısız oldu");
+                            if (response.errors) {
+                                console.error("Hatalar:", response.errors);
+                            }
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Sunucu hatası: " + xhr.statusText);
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false);
+                        $btn.find('.submit-text').text('Kaydet');
+                        $btn.find('.spinner-border').addClass('d-none');
+                    }
+                });
+            });
+        });
+    </script>
+}

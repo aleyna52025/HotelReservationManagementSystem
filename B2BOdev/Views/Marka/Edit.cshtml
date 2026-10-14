@@ -1,0 +1,32 @@
+﻿@model B2BOdev.Models.Marka
+
+@{
+    ViewData["Title"] = "Marka Düzenle";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="MarkaID
+" />
+
+
+
+    <div class="form-group">
+        <label asp-for="MarkaAd">Marka Ad</label>
+        <input asp-for="MarkaAd" class="form-control" />
+        <span asp-validation-for="MarkaAd" class="text-danger"></span>
+    </div>
+
+
+
+
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

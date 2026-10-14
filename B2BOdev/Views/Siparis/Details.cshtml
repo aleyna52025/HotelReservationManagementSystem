@@ -1,0 +1,78 @@
+﻿@model B2BOdev.Models.Siparis
+
+@{
+    ViewData["Title"] = "Sipariş Detayları";
+}
+
+<h2>Sipariş Detayları</h2>
+
+<div>
+    <h4>Sipariş Bilgileri</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Sipariş No</dt>
+        <dd class="col-sm-10">@Model.SipNo</dd>
+
+        <dt class="col-sm-2">Firma</dt>
+        <dd class="col-sm-10">@Model.Firma?.FirmaUnvanı</dd>
+
+        <dt class="col-sm-2">Tarih</dt>
+        <dd class="col-sm-10">@Model.Tarih.ToString("dd.MM.yyyy")</dd>
+
+        <dt class="col-sm-2">Durum</dt>
+        <dd class="col-sm-10">@Model.Durum?.durumu</dd>
+
+        <dt class="col-sm-2">Teslimat Adresi</dt>
+        <dd class="col-sm-10">@Model.Adres?.Adres1</dd>
+
+        <dt class="col-sm-2">Açıklama</dt>
+        <dd class="col-sm-10">@Model.Aciklama</dd>
+    </dl>
+</div>
+
+@if (Model.SiparisDetay != null && Model.SiparisDetay.Any())
+{
+    <h4>Sipariş Detayları</h4>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Malzeme</th>
+                <th>Birim</th>
+                <th>Miktar</th>
+                <th>Fiyat</th>
+                <th>KDV</th>
+                <th>İndirim Oranı</th>
+                <th>İndirim Tutarı</th>
+                <th>Toplam</th>
+                <th>Toplam KDV</th>
+                <th>Genel Toplam</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var detay in Model.SiparisDetay)
+            {
+                <tr>
+                    <td>@detay.Malzeme?.MalzemeAd</td>
+                    <td>@detay.Birim?.BirimAd</td>
+                    <td>@detay.Miktar</td>
+                    <td>@detay.Fiyat.ToString("C")</td>
+                    <td>@detay.Kdv</td>
+                    <td>@detay.IndOran</td>
+                    <td>@detay.IndTutar.ToString("C")</td>
+                    <td>@detay.Toplam.ToString("C")</td>
+                    <td>@detay.ToplamKdv.ToString("C")</td>
+                    <td>@detay.GenelToplam.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Bu siparişe ait detay bulunmamaktadır.</p>
+}
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.SipID" class="btn btn-primary">Düzenle</a>
+    <a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+</p>

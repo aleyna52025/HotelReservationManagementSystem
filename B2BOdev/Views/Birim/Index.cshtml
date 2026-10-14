@@ -1,0 +1,135 @@
+﻿@model IEnumerable<B2BOdev.Models.Birim>
+@{
+    ViewData["Title"] = "Birimler";
+    var personelYetki = Context.Session.GetString("Personel");
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+    .modal-header {
+        background-color: #0d6efd;
+        color: white;
+    }
+</style>
+
+<div class="d-flex justify-content-between mb-3">
+    <input type="text" id="searchInput" class="form-control w-50" placeholder="Birim adı veya kodu ara..." />
+</div>
+
+@if (personelYetki == "1")
+{
+    <a href="#" class="btn btn-sm btn-warning edit-birim-btn"
+   data-url="@Url.Action("EditPartial", "Birim", new { id = 0 })">
+        Yeni
+    </a>
+}
+
+<h2 class="text-center">Birim Listesi</h2>
+
+<table class="table table-striped table-bordered" id="birimTable">
+    <thead class="table-dark">
+        <tr>
+            <th>Birim Adı</th>
+            <th>Birim Kodu</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var birim in Model)
+        {
+            <tr>
+                <td>@birim.BirimAd</td>
+                <td>@birim.BirimKod</td>
+                <td>
+                    @if (personelYetki == "1")
+                    {
+                        <a href="#" class="btn btn-sm btn-warning edit-birim-btn"
+                   data-url="@Url.Action("EditPartial", "Birim", new { id = birim.BirimID })">
+                            Düzenle
+                        </a>
+                        <a href="@Url.Action("DeleteConfirmed", "Birim", new { id = birim.BirimID })"
+                   class="btn btn-sm btn-danger">Sil</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="editBirimModal" tabindex="-1" aria-labelledby="editBirimModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBirimModalLabel">Birim Düzenle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- PartialView buraya ajax ile gelecek -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll(".edit-birim-btn").forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                const url = this.getAttribute("data-url");
+
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById("modalContent").innerHTML = html;
+                        const modal = new bootstrap.Modal(document.getElementById("editBirimModal"));
+                        modal.show();
+
+                        setTimeout(() => {
+                            bindEditFormSubmit();
+                        }, 100);
+                    });
+            });
+        });
+
+        function bindEditFormSubmit() {
+            const form = document.getElementById("editBirimForm");
+            if (!form) return;
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert("Bir hata oluştu.");
+                        }
+                    });
+            });
+        }
+
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            var input = this.value.toLowerCase();
+            var rows = document.querySelectorAll("#birimTable tbody tr");
+
+            rows.forEach(function (row) {
+                var birimAd = row.children[0].textContent.toLowerCase();
+                var birimKod = row.children[1].textContent.toLowerCase();
+
+                if (birimAd.includes(input) || birimKod.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+}

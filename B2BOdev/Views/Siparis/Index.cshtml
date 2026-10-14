@@ -1,0 +1,95 @@
+﻿@model IEnumerable<B2BOdev.Models.Siparis>
+
+@{
+    ViewData["Title"] = "Sipariş Listesi";
+    var personelYetki = Context.Session.GetString("Personel");
+}
+
+<h2>@ViewData["Title"]</h2>
+<br />
+
+<input type="text" id="searchInput" class="form-control w-50" placeholder="Sipariş ID girin" />
+
+<table class="table table-bordered table-striped mt-3" id="siparistablo">
+    <thead>
+        <tr>
+            <th>Sipariş ID</th>
+            <th>Firma</th>
+            <th>Tarih</th>
+            <th>Sipariş No</th>
+            <th>Durum</th>
+            <th>Teslimat Adresi</th>
+            <th>Açıklama</th>
+            <th>Detaylar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.SipID</td>
+                <td>@item.Firma?.FirmaUnvanı</td>
+                <td>@item.Tarih.ToString("dd.MM.yyyy")</td>
+                <td>@item.SipNo</td>
+                <td>@item.Durum?.durumu</td>
+                <td>@item.Adres?.Adres1</td>
+                <td>@item.Aciklama</td>
+                @if (personelYetki == "1")
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.SipID" class="btn btn-info btn-sm">Detay</a>
+                        <button class="btn btn-warning btn-sm" onclick="openEditModal(@item.SipID)">Düzenle</button>
+                        <a asp-action="Delete" asp-route-id="@item.SipID" class="btn btn-danger btn-sm">Sil</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Yeni Sipariş Ekle</a>
+
+<!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sipariş Düzenle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="editModalBody">
+             
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function openEditModal(id) {
+            $.ajax({
+                url: '/Siparis/EditPartial/' + id,
+                type: 'GET',
+                success: function (data) {
+                    $('#editModalBody').html(data);
+                    $('#editModal').modal('show');
+                },
+                error: function () {
+                    alert('Bir hata oluştu!');
+                }
+            });
+        }
+
+        // Filtreleme
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            var input = this.value.toLowerCase();
+            var rows = document.querySelectorAll("#siparistablo tbody tr");
+
+            rows.forEach(function (row) {
+                var sipid = row.children[0].textContent.toLowerCase();
+                row.style.display = sipid.includes(input) ? "" : "none";
+            });
+        });
+    </script>
+}

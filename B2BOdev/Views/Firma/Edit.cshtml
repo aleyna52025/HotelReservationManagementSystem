@@ -1,0 +1,50 @@
+﻿@model B2BOdev.Models.Firma
+
+@{
+    ViewData["Title"] = "Firma Düzenle";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="FirmaID" />
+
+    <div class="form-group">
+        <label asp-for="FirmaKod" class="control-label"></label>
+        <input asp-for="FirmaKod" class="form-control" />
+        <span asp-validation-for="FirmaKod" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FirmaUnvanı" class="control-label"></label>
+        <input asp-for="FirmaUnvanı" class="form-control" />
+        <span asp-validation-for="FirmaUnvanı" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="VergiNo" class="control-label"></label>
+        <input asp-for="VergiNo" class="form-control" />
+        <span asp-validation-for="VergiNo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="VergiDairesi" class="control-label"></label>
+        <input asp-for="VergiDairesi" class="form-control" />
+        <span asp-validation-for="VergiDairesi" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Eposta" class="control-label"></label>
+        <input asp-for="Eposta" class="form-control" />
+        <span asp-validation-for="Eposta" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,28 @@
+﻿@model B2BOdev.Models.Birim
+
+@{
+    ViewData["Title"] = "Birim Sil";
+}
+
+<h2 class="text-danger text-center">Birim Sil</h2>
+
+<h4 class="text-center">Bu birimi silmek istediğinize emin misiniz?</h4>
+<hr />
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Birim Adı</dt>
+            <dd class="col-sm-8">@Model.BirimAd</dd>
+            <dt class="col-sm-4">Birim Kodu</dt>
+            <dd class="col-sm-8">@Model.BirimKod</dd>
+            
+        </dl>
+  <form asp-action="Delete" method="post">
+            @* CSRF koruması *@
+            <input type="hidden" asp-for="BirimID" />
+            <button type="submit" class="btn btn-danger">Sil</button>
+            <a asp-action="Index" class="btn btn-secondary">İptal</a>
+        </form>
+    </div>
+</div>

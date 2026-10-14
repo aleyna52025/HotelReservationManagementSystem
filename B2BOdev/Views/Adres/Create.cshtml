@@ -1,0 +1,95 @@
+﻿@model B2BOdev.Models.Adres
+
+@{
+    ViewData["Title"] = "Adres Ekle";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Adres Ekle</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Adres1" class="form-label"></label>
+                        <input asp-for="Adres1" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Adres2" class="form-label"></label>
+                        <input asp-for="Adres2" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Ilid" class="form-label">İl</label>
+                        <select asp-for="Ilid" id="Ilid" class="form-select" asp-items="ViewBag.Ilid"></select>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Ilceid" class="form-label">İlçe</label>
+                        <select asp-for="Ilceid" id="Ilceid" class="form-select">
+                            <option value="">Önce il seçiniz</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="FirmaId" class="form-label">Firma</label>
+                        <select asp-for="FirmaId" class="form-select" asp-items="ViewBag.FirmaId"></select>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Mahalle" class="form-label"></label>
+                        <input asp-for="Mahalle" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Tel" class="form-label"></label>
+                        <input asp-for="Tel" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Fax" class="form-label"></label>
+                        <input asp-for="Fax" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="CepTel" class="form-label"></label>
+                        <input asp-for="CepTel" class="form-control" />
+                    </div>
+
+                    <div class="col-md-12">
+                        <label asp-for="Del" class="form-label"></label>
+                        <input asp-for="Del" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            $('#Ilid').change(function () {
+                var ilId = $(this).val();
+                var ilceDropdown = $('#Ilceid');
+                ilceDropdown.empty();
+
+                if (ilId) {
+                    $.getJSON('@Url.Action("IlceleriGetir", "Adres")', { ilId: ilId }, function (data) {
+                        ilceDropdown.append($('<option>').text('Seçiniz').attr('value', ''));
+                        $.each(data, function (i, ilce) {
+                            ilceDropdown.append($('<option>').text(ilce.ilceAdi).attr('value', ilce.ilceid));
+                        });
+                    });
+                } else {
+                    ilceDropdown.append($('<option>').text('Önce il seçiniz').attr('value', ''));
+                }
+            });
+        });
+    </script>
+}

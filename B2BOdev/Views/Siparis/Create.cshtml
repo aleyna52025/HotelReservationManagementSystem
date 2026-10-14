@@ -1,0 +1,697 @@
+﻿@model List<B2BOdev.Models.Malzeme>
+@{
+    ViewData["Title"] = "Sipariş Ver";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+<style>
+    /* Canlı B2B Renkler ve Animasyonlar */
+    body {
+        background: #f0f4f8;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #sepetButonu button {
+        background: linear-gradient(45deg, #FF6B6B, #FFD93D);
+        border: none;
+        font-weight: 700;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.6);
+        transition: transform 0.3s ease;
+    }
+
+        #sepetButonu button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.9);
+        }
+
+    #sepetPanel {
+        border-radius: 12px;
+        background: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    h3 {
+        color: #34495E;
+        font-weight: 700;
+        text-shadow: 1px 1px 2px #ccc;
+    }
+
+    /* Ürün Kartları */
+    .urunKart .card {
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(52, 73, 94, 0.15);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .urunKart .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(52, 73, 94, 0.3);
+        }
+
+    .urunKart .card-title {
+        color: #2C3E50;
+        font-weight: 800;
+    }
+
+    .urunKart .card-text strong {
+        color: #7F8C8D;
+    }
+
+    /* Canlı butonlar */
+    .sepeteEkleBtn {
+        background: linear-gradient(90deg, #1ABC9C, #16A085);
+        border: none;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(26, 188, 156, 0.6);
+        transition: background 0.3s ease, transform 0.3s ease;
+        color: white;
+    }
+
+        .sepeteEkleBtn:hover {
+            background: linear-gradient(90deg, #16A085, #1ABC9C);
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(26, 188, 156, 0.9);
+        }
+
+    /* Fırsat Baloncukları */
+    .firsat-baloncuğu {
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        background: #FF6B6B;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 30px;
+        font-weight: 700;
+        box-shadow: 0 5px 12px rgba(255, 107, 107, 0.7);
+        animation: baloncukAnim 5s ease-in-out infinite alternate;
+        cursor: default;
+        user-select: none;
+        z-index: 1050;
+        font-size: 14px;
+    }
+
+        .firsat-baloncuğu:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .firsat-baloncuğu:nth-child(2) {
+            top: 130px;
+            left: 50px;
+            background: #FFD93D;
+            color: #333;
+            animation-delay: 2s;
+        }
+
+        .firsat-baloncuğu:nth-child(3) {
+            top: 180px;
+            left: 30px;
+            background: #1ABC9C;
+            animation-delay: 4s;
+        }
+
+    @@keyframes baloncukAnim {
+        0% {
+            transform: translateY(0) scale(1);
+            box-shadow: 0 5px 12px rgba(255, 107, 107, 0.7);
+        }
+
+        100% {
+            transform: translateY(-15px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 1);
+        }
+    }
+
+    /* Pagination container */
+    #paginationContainer {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+        #paginationContainer button {
+            margin: 0 4px;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            border: none;
+            font-weight: 700;
+            color: #34495E;
+            background: #ecf0f1;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+            #paginationContainer button:hover {
+                background: #1ABC9C;
+                color: white;
+            }
+
+        #paginationContainer .btn-primary {
+            background: #16A085;
+            color: white;
+            cursor: default;
+        }
+
+    /* Yeni Kategori Filtre Paneli */
+    #kategoriFiltrePanel {
+        position: sticky;
+        top: 20px;
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+        #kategoriFiltrePanel h5 {
+            color: #2C3E50;
+            border-bottom: 2px solid #f0f4f8;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+    .kategori-item {
+        margin-bottom: 8px;
+        transition: all 0.2s ease;
+    }
+
+        .kategori-item label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+            .kategori-item label:hover {
+                background: #f8f9fa;
+            }
+
+        .kategori-item input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .kategori-item .kategori-ad {
+            flex-grow: 1;
+            font-size: 14px;
+        }
+
+        .kategori-item .kategori-count {
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .kategori-item input[type="checkbox"]:checked + .kategori-ad {
+            font-weight: 600;
+            color: #1ABC9C;
+        }
+
+        .kategori-item input[type="checkbox"]:checked ~ .kategori-count {
+            background: #1ABC9C;
+            color: white;
+        }
+
+    /* Arama Kutusu */
+    #searchContainer {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: white;
+        padding: 15px 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 15px;
+    }
+
+    #searchInput {
+        border-radius: 20px;
+        padding: 10px 20px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+        #searchInput:focus {
+            border-color: #1ABC9C;
+            box-shadow: 0 0 0 0.25rem rgba(26, 188, 156, 0.25);
+        }
+
+    /* Miktar kontrol butonları */
+    .miktar-kontrol {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .miktar-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #1ABC9C;
+        color: white;
+        border: none;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+        .miktar-btn:hover {
+            background: #16A085;
+            transform: scale(1.1);
+        }
+
+        .miktar-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    .miktar-deger {
+        margin: 0 10px;
+        font-weight: bold;
+        min-width: 30px;
+        text-align: center;
+    }
+
+    /* Sepet içindeki miktar kontrol */
+    .sepet-miktar-kontrol {
+        display: flex;
+        align-items: center;
+    }
+
+    .sepet-miktar-btn {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #1ABC9C;
+        color: white;
+        border: none;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 12px;
+    }
+
+        .sepet-miktar-btn:hover {
+            background: #16A085;
+        }
+
+        .sepet-miktar-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+    .sepet-miktar-deger {
+        margin: 0 8px;
+        font-weight: bold;
+        min-width: 20px;
+        text-align: center;
+    }
+</style>
+
+<!-- Fırsat Baloncukları -->
+<div class="firsat-baloncuğu">%20 İndirim Bugün!</div>
+<div class="firsat-baloncuğu">Ücretsiz Kargo 500₺ üzeri</div>
+<div class="firsat-baloncuğu">Yeni Ürünler Stokta</div>
+
+<!-- Sepet Butonu -->
+<div id="sepetButonu" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+    <button class="btn btn-warning shadow" onclick="toggleSepetPanel()">
+        🛒 Sepet (<span id="sepetAdet">0</span>)
+    </button>
+</div>
+
+<!-- Sepet Paneli -->
+<div id="sepetPanel" class="bg-light border shadow-lg p-3" style="position: fixed; top: 70px; right: 20px; width: 400px; max-height: 80vh; overflow-y: auto; display: none; z-index: 1050;">
+    <h5 class="mb-3">Sepet</h5>
+    <table class="table table-sm table-bordered align-middle mb-2">
+        <thead class="table-secondary">
+            <tr>
+                <th>Ürün</th>
+                <th>Adet</th>
+                <th>Birim</th>
+                <th>Fiyat</th>
+                <th>Toplam</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="sepetBody"></tbody>
+    </table>
+    <div class="d-flex justify-content-between">
+        <strong>Genel Toplam:</strong>
+        <strong id="genelToplam">0.00 ₺</strong>
+    </div>
+</div>
+
+<div class="container-fluid my-4">
+    <div class="row">
+        <!-- Sol Taraf - Kategori Filtreleme -->
+        <div class="col-lg-2">
+            <div id="kategoriFiltrePanel">
+                <h5><i class="fas fa-filter me-2"></i>Kategoriler</h5>
+                <div id="kategoriListesi">
+                  @foreach (var kat in ViewBag.Kategoriler)
+{
+    <div class="kategori-item">
+                            <span class="text-muted" style="font-size: 0.85em;">Üst Kategori: @kat.UstKategoriAd</span>
+        
+        <div>
+            <span class="kategori-ad fw-bold">@kat.KategoriAd</span><br />
+                                <input type="checkbox" id="kat_@kat.KategoriId" value="@kat.KategoriId" class="kategori-checkbox">
+        </div>
+        <span class="kategori-count">
+            @Model.Count(m => m.KAtegoriId == kat.KategoriId)
+        </span>
+    </div>
+}
+
+
+                </div>
+            </div>
+        </div>
+ 
+        <div class="col-lg-10">
+            <div id="searchContainer">
+                <div class="input-group mb-3">
+                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-search"></i></span>
+                    <input id="searchInput" type="text" class="form-control border-start-0" placeholder="Ürün ara...">
+                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <h3 class="mb-4">Ürünler</h3>
+
+            <div class="row" id="urunler">
+                @foreach (var malzeme in Model)
+                {
+                    <div class="col-6 col-md-4 col-lg-3 mb-4 urunKart"
+                     data-urunad="@malzeme.MalzemeAd.ToLower()"
+                     data-kategoriid="@malzeme.KAtegoriId">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">@malzeme.MalzemeAd</h5>
+                                <p class="card-text mb-1"><strong>Görsel:</strong></p>
+                                <img src="@malzeme.GorselYolu" alt="Malzeme Görseli" style="max-width: 200px; height: auto;" />
+
+                                <p class="card-text mb-1"><strong>Birim:</strong> @malzeme.Birim?.BirimAd</p>
+                                <p class="card-text mb-1"><strong>Marka:</strong> @malzeme.Marka?.MarkaAd</p>
+                                <p class="card-text mb-3"><strong>Açıklama:</strong> @malzeme.Aciklama</p>
+ 
+                                <div class="miktar-kontrol">
+                                    <button class="miktar-btn miktar-azalt" data-id="@malzeme.MalzemeId">-</button>
+                                    <span class="miktar-deger" data-id="@malzeme.MalzemeId">1</span>
+                                    <button class="miktar-btn miktar-artir" data-id="@malzeme.MalzemeId">+</button>
+                                </div>
+
+                                <button class="btn btn-primary btn-sm mt-auto sepeteEkleBtn"
+                                    data-id="@malzeme.MalzemeId"
+                                    data-ad="@malzeme.MalzemeAd"
+                                    data-birim="@malzeme.Birim?.BirimAd"
+                                    data-fiyat="100"
+                                    data-birimid="@malzeme.BirimId">
+                                    Sepete Ekle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div id="paginationContainer"></div>  
+
+            <hr />
+            <h3 class="mb-3">Teslimat Bilgileri</h3>
+            <form asp-action="Create" asp-controller="Siparis" method="post" id="siparisForm" novalidate>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="firmaSelect" class="form-label">Firma</label>
+                        <select id="firmaSelect" name="FirmaId" class="form-select" required>
+                            <option value="">Firma Seçiniz</option>
+                            @foreach (var f in ViewBag.Firmalar as SelectList)
+                            {
+                                <option value="@f.Value">@f.Text</option>
+                            }
+                        </select>
+                        <div class="invalid-feedback">Lütfen firma seçiniz.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="adresSelect" class="form-label">Teslimat Adresi</label>
+                        <select id="adresSelect" name="teslimatadresıd" class="form-select" required>
+                            <option value="">Adres Seçiniz</option>
+                            @foreach (var a in ViewBag.Adresler as SelectList)
+                            {
+                                <option value="@a.Value">@a.Text</option>
+                            }
+                        </select>
+                        <div class="invalid-feedback">Lütfen teslimat adresi seçiniz.</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="aciklama" class="form-label">Sipariş Notu (İsteğe Bağlı)</label>
+                    <textarea name="Aciklama" id="aciklama" class="form-control" rows="3"></textarea>
+                </div>
+
+                <input type="hidden" name="SiparisDetayJson" id="SiparisDetayJson" />
+                <button type="submit" class="btn btn-success w-100 btn-lg">Siparişi Gönder</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#firmaSelect, #adresSelect').select2({ width: '100%', language: "tr" });
+
+            
+            const itemsPerPage = 12;
+            let currentPage = 1;
+
+          
+            function paginate(page) {
+                currentPage = page;
+
+                const searchTerm = $("#searchInput").val().toLowerCase();
+                const selectedKategoriler = $(".kategori-checkbox:checked").map(function () {
+                    return $(this).val();
+                }).get();
+ 
+                const filteredItems = $("#urunler .urunKart").filter(function () {
+                    const urunAd = $(this).data("urunad");
+                    const katId = $(this).data("kategoriid").toString();
+
+                    const searchMatch = !searchTerm || urunAd.includes(searchTerm);
+                    const kategoriMatch = selectedKategoriler.length === 0 || selectedKategoriler.includes(katId);
+
+                    return searchMatch && kategoriMatch;
+                });
+
+                const totalItems = filteredItems.length;
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+ 
+                $("#urunler .urunKart").hide();
+                 
+                filteredItems.slice((page - 1) * itemsPerPage, page * itemsPerPage).show();
+                 
+                let paginationHtml = '';
+                const maxVisiblePages = 5;
+                let startPage, endPage;
+
+                if (totalPages <= maxVisiblePages) {
+                    startPage = 1;
+                    endPage = totalPages;
+                } else {
+                    const maxPagesBeforeCurrent = Math.floor(maxVisiblePages / 2);
+                    const maxPagesAfterCurrent = Math.ceil(maxVisiblePages / 2) - 1;
+
+                    if (currentPage <= maxPagesBeforeCurrent) {
+                        startPage = 1;
+                        endPage = maxVisiblePages;
+                    } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
+                        startPage = totalPages - maxVisiblePages + 1;
+                        endPage = totalPages;
+                    } else {
+                        startPage = currentPage - maxPagesBeforeCurrent;
+                        endPage = currentPage + maxPagesAfterCurrent;
+                    }
+                }
+
+                if (startPage > 1) {
+                    paginationHtml += `<button class="btn btn-sm mx-1 sayfaBtn" data-page="1">1</button>`;
+                    if (startPage > 2) {
+                        paginationHtml += `<span class="mx-1">...</span>`;
+                    }
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    paginationHtml += `<button class="btn btn-sm mx-1 ${i === page ? 'btn-primary' : 'btn-outline-primary'} sayfaBtn" data-page="${i}">${i}</button>`;
+                }
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        paginationHtml += `<span class="mx-1">...</span>`;
+                    }
+                    paginationHtml += `<button class="btn btn-sm mx-1 sayfaBtn" data-page="${totalPages}">${totalPages}</button>`;
+                }
+
+                $("#paginationContainer").html(paginationHtml);
+            }
+             
+            $("#clearSearch").click(function () {
+                $("#searchInput").val("");
+                paginate(1);
+            });
+             
+            $("#searchInput").on("input", function () {
+                paginate(1);
+            });
+             
+            $(".kategori-checkbox").change(function () {
+                paginate(1);
+            });
+             
+            $(document).on("click", ".sayfaBtn", function () {
+                const page = parseInt($(this).data("page"));
+                paginate(page);
+            });
+             
+            paginate(1);
+
+            let sepet = [];
+             
+            $(document).on("click", ".miktar-artir", function () {
+                const id = $(this).data("id");
+                const miktarSpan = $(`.miktar-deger[data-id="${id}"]`);
+                let miktar = parseInt(miktarSpan.text());
+                miktarSpan.text(miktar + 1);
+            });
+             
+            $(document).on("click", ".miktar-azalt", function () {
+                const id = $(this).data("id");
+                const miktarSpan = $(`.miktar-deger[data-id="${id}"]`);
+                let miktar = parseInt(miktarSpan.text());
+                if (miktar > 1) {
+                    miktarSpan.text(miktar - 1);
+                }
+            });
+
+            function updateSepetTable() {
+                let tbody = $("#sepetBody");
+                tbody.empty();
+                let genelToplam = 0;
+                let toplamAdet = 0;
+
+                sepet.forEach((item, i) => {
+                    let toplam = item.fiyat * item.miktar;
+                    genelToplam += toplam;
+                    toplamAdet += item.miktar;
+
+                    tbody.append(`
+                                <tr>
+                                    <td>${item.ad}</td>
+                                    <td>
+                                        <div class="sepet-miktar-kontrol">
+                                            <button class="sepet-miktar-btn sepet-miktar-azalt" data-index="${i}">-</button>
+                                            <span class="sepet-miktar-deger">${item.miktar}</span>
+                                            <button class="sepet-miktar-btn sepet-miktar-artir" data-index="${i}">+</button>
+                                        </div>
+                                    </td>
+                                    <td>${item.birim}</td>
+                                    <td>${item.fiyat.toFixed(2)}</td>
+                                    <td>${toplam.toFixed(2)}</td>
+                                    <td><button class="btn btn-danger btn-sm sepetRemoveBtn" data-index="${i}">X</button></td>
+                                </tr>`);
+                });
+
+                $("#genelToplam").text(genelToplam.toFixed(2) + " ₺");
+                $("#sepetAdet").text(toplamAdet);
+            }
+
+            $(".sepeteEkleBtn").click(function () {
+                const id = parseInt($(this).data("id"));
+                const ad = $(this).data("ad");
+                const birim = $(this).data("birim");
+                const fiyat = parseFloat($(this).data("fiyat"));
+                const birimId = parseInt($(this).data("birimid"));
+                const miktar = parseInt($(this).closest(".card-body").find(`.miktar-deger[data-id="${id}"]`).text());
+
+                if (!miktar || miktar <= 0) return alert("Lütfen geçerli bir miktar girin.");
+
+                let index = sepet.findIndex(x => x.id === id);
+                if (index > -1) {
+                    sepet[index].miktar += miktar;
+                } else {
+                    sepet.push({ id, ad, birim, fiyat, miktar, birimId });
+                }
+                 
+                $(this).closest(".card-body").find(`.miktar-deger[data-id="${id}"]`).text(1);
+                updateSepetTable();
+            });
+             
+            $(document).on("click", ".sepet-miktar-artir", function () {
+                const index = parseInt($(this).closest("button").data("index"));
+                sepet[index].miktar += 1;
+                updateSepetTable();
+            });
+             
+            $(document).on("click", ".sepet-miktar-azalt", function () {
+                const index = parseInt($(this).closest("button").data("index"));
+                if (sepet[index].miktar > 1) {
+                    sepet[index].miktar -= 1;
+                    updateSepetTable();
+                }
+            });
+
+            $(document).on("click", ".sepetRemoveBtn", function () {
+                const index = parseInt($(this).data("index"));
+                sepet.splice(index, 1);
+                updateSepetTable();
+            });
+
+            $("#siparisForm").submit(function (e) {
+                if (sepet.length === 0) {
+                    e.preventDefault();
+                    alert("Sepet boş. Lütfen ürün ekleyin.");
+                    return;
+                }
+
+                const siparisDetay = sepet.map(x => ({
+                    MalzemeID: x.id,
+                    BirimId: x.birimId,
+                    Miktar: x.miktar,
+                    Fiyat: x.fiyat,
+                    Kdv: 18,
+                    IndOran: 0
+                }));
+
+                $("#SiparisDetayJson").val(JSON.stringify(siparisDetay));
+            });
+        });
+
+        function toggleSepetPanel() {
+            $("#sepetPanel").toggle();
+        }
+    </script>
+}

@@ -1,0 +1,113 @@
+﻿@model IEnumerable<B2BOdev.Models.Firma>
+
+@{
+    ViewData["Title"] = "Firmalar";
+    var userName = Context.Session.GetString("UserName");
+    var personelYetki = Context.Session.GetString("Personel");
+}
+
+<br />
+<br />
+<br />
+<br />
+
+<div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control w-50" placeholder="Firma Kodu girin" />
+</div>
+
+@if (personelYetki == "1")
+{
+    <a href="#" class="btn btn-sm btn-warning edit-birim-btn" data-url="@Url.Action("EditPartial", "Firma", new {id=0})">Yeni</a>
+
+}
+
+<h2 class="text-center">Firma Listesi</h2>
+
+<table class="table table-striped table-bordered" id="firmatablo">
+    <thead class="table-dark">
+        <tr>
+            <th>Firma Kodu</th>
+            <th>Unvan</th>
+            <th>Vergi No</th>
+            <th>Telefon No</th>
+            <th>Vergi Dairesi</th>
+            <th>E-Posta</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var firma in Model)
+        {
+            <tr>
+                <td>@firma.FirmaKod</td>
+                <td>@firma.FirmaUnvanı</td>
+                <td>@firma.VergiNo</td>
+                <td>@firma.tel</td>
+                <td>@firma.VergiDairesi</td>
+                <td>@firma.Eposta</td>
+                <td>
+                    @if (personelYetki == "1")
+                    {
+                        <a href="#" class="btn btn-sm btn-warning edit-birim-btn" data-url="@Url.Action("EditPartial", "Firma", new { id = firma.FirmaID })">Düzenle</a>
+                        <a href="@Url.Action("DeleteConfirmed", "Firma", new { id = firma.FirmaID })" class="btn btn-sm btn-danger">Sil</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modalContent"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        document.querySelectorAll(".edit-birim-btn").forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                const url = this.getAttribute("data-url");
+
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById("modalContent").innerHTML = html;
+                        const modal = new bootstrap.Modal(document.getElementById("editModal"));
+                        modal.show();
+
+                        setTimeout(() => {
+                            bindEditFormSubmit();
+                        }, 100);
+                    });
+            });
+        });
+
+        function bindEditFormSubmit() {
+            const form = document.getElementById("editFirmaForm");
+            if (!form) return;
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                fetch('/Firma/EditPartial', {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert("Bir hata oluştu.");
+                        }
+                    });
+            });
+        }
+    </script>
+}

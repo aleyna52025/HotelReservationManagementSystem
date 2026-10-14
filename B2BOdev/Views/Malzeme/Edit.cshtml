@@ -1,0 +1,115 @@
+﻿@model B2BOdev.Models.Malzeme
+
+@{
+    ViewData["Title"] = "Malzeme Düzenle";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container mt-5">
+    <div class="card shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h3 class="mb-0">@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="MalzemeId" />
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="MalzemeKod" class="form-label"></label>
+                        <input asp-for="MalzemeKod" class="form-control" />
+                        <span asp-validation-for="MalzemeKod" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="MalzemeAd" class="form-label"></label>
+                        <input asp-for="MalzemeAd" class="form-control" />
+                        <span asp-validation-for="MalzemeAd" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="MarkaId" class="form-label">Marka</label>
+                        <select asp-for="MarkaId" class="form-control" asp-items="ViewBag.MarkaListesi">
+                            <option value="">Lütfen Marka Seçiniz</option>
+                        </select>
+                        <span asp-validation-for="MarkaId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="KAtegoriId" class="form-label">Kategori</label>
+                        <select asp-for="KAtegoriId" class="form-control" asp-items="ViewBag.KategoriListesi">
+                            <option value="">Lütfen Kategori Seçiniz</option>
+                        </select>
+                        <span asp-validation-for="KAtegoriId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="BirimId" class="form-label">Birim</label>
+                        <select asp-for="BirimId" class="form-control" asp-items="ViewBag.BirimListesi">
+                            <option value="">Lütfen Birim Seçiniz</option>
+                        </select>
+                        <span asp-validation-for="BirimId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label asp-for="Aciklama" class="form-label"></label>
+                        <textarea asp-for="Aciklama" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Aciklama" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="SatVergiOran" class="form-label">Satış Vergi Oranı</label>
+                        <input asp-for="SatVergiOran" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="SatVergiOran" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="OzelKod1" class="form-label"></label>
+                        <input asp-for="OzelKod1" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="OzelKod2" class="form-label"></label>
+                        <input asp-for="OzelKod2" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="OzelKod3" class="form-label"></label>
+                        <input asp-for="OzelKod3" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="OzelKod4" class="form-label"></label>
+                        <input asp-for="OzelKod4" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="OzelKod5" class="form-label"></label>
+                        <input asp-for="OzelKod5" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Görsel Yükle</label>
+                        <input type="file" name="GorselDosyasi" class="form-control" accept="image/*" />
+                        @* İsteğe bağlı: eski görsel gösterimi *@
+                        @if (!string.IsNullOrEmpty(Model.GorselYolu))
+                        {
+                            <div class="mt-2">
+                                <img src="@Model.GorselYolu" alt="Görsel" width="120" class="rounded border" />
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-success me-2">Güncelle</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">İptal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,145 @@
+﻿@model B2BOdev.Models.MalzemeViewModel
+
+<style>
+    .form-label {
+        font-weight: 600;
+        color: #343a40;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+        border: 1px solid #ced4da;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+            border-color: #86b7fe;
+        }
+
+    .text-danger {
+        font-size: 0.9rem;
+    }
+
+    .btn-primary, .btn-secondary {
+        border-radius: 0.5rem;
+        padding: 0.5rem 1.5rem;
+        font-weight: 600;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+    .card {
+        background-color: #ffffff;
+        border-radius: 1rem;
+        box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        border: none;
+    }
+
+    .modal-header {
+        background-color: #0d6efd;
+        color: white;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+    }
+
+    .modal-body {
+        padding: 1.5rem 2rem;
+    }
+
+    .text-end {
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="card">
+    <div class="modal-header">
+        <h5 class="modal-title">Malzeme Güncelle</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    </div>
+
+    <form asp-action="EditPartial" method="post" id="editKategoriForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="MalzemeId" />
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="MalzemeKod" class="form-label">Malzeme Kodu</label>
+                    <input asp-for="MalzemeKod" class="form-control" />
+                    <span asp-validation-for="MalzemeKod" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="MalzemeAd" class="form-label">Malzeme Adı</label>
+                    <input asp-for="MalzemeAd" class="form-control" />
+                    <span asp-validation-for="MalzemeAd" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MarkaAdi" class="form-label">Marka</label>
+                <input asp-for="MarkaAdi" class="form-control" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="KategoriAdi" class="form-label">Kategori</label>
+                <input asp-for="KategoriAdi" class="form-control" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Aciklama" class="form-label">Açıklama</label>
+                <input asp-for="Aciklama" class="form-control" />
+                <span asp-validation-for="Aciklama" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="OzelKod1" class="form-label">Özel Kod 1</label>
+                    <input asp-for="OzelKod1" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="OzelKod2" class="form-label">Özel Kod 2</label>
+                    <input asp-for="OzelKod2" class="form-control" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="OzelKod3" class="form-label">Özel Kod 3</label>
+                    <input asp-for="OzelKod3" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="OzelKod4" class="form-label">Özel Kod 4</label>
+                    <input asp-for="OzelKod4" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="OzelKod5" class="form-label">Özel Kod 5</label>
+                    <input asp-for="OzelKod5" class="form-control" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="BirimAdi" class="form-label">Birim</label>
+                <input asp-for="BirimAdi" class="form-control" readonly />
+            </div>
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

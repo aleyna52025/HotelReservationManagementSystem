@@ -1,0 +1,63 @@
+﻿@model B2BOdev.Models.User
+
+@{
+    ViewData["Title"] = "Kullanıcı Ekle";
+}
+
+<h2 class="text-primary">Kullanıcı Ekle</h2>
+
+<div class="card p-4 shadow-sm">
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="email" class="control-label"></label>
+            <input asp-for="email" class="form-control" />
+            <span asp-validation-for="email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="password" class="control-label"></label>
+            <input asp-for="password" class="form-control" type="password" />
+            <span asp-validation-for="password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Ad" class="control-label"></label>
+            <input asp-for="Ad" class="form-control" />
+            <span asp-validation-for="Ad" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Soyad" class="control-label"></label>
+            <input asp-for="Soyad" class="form-control" />
+            <span asp-validation-for="Soyad" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Personel" class="control-label">Yetki</label>
+            <select asp-for="Personel" class="form-control">
+                <option value="1">Yönetici</option>
+                <option value="0">Görüntüleyici</option>
+            </select>
+            <span asp-validation-for="Personel" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="FirmaID" class="control-label">Firma</label>
+            <select asp-for="FirmaID" class="form-control" asp-items="@(ViewData["FirmaID"] as SelectList)">
+                <option value="">-- Firma Seçiniz --</option>
+            </select>
+            <span asp-validation-for="FirmaID" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-success">Kaydet</button>
+            <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">İptal</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

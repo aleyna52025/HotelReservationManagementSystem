@@ -1,0 +1,139 @@
+﻿@model B2BOdev.Models.Siparis
+@using System.Linq
+@{
+    var detaylar = Model.SiparisDetay?.ToList();
+}
+
+<form asp-action="EditPartial" asp-controller="Siparis" method="post" id="editForm">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="SipID" />
+
+    <div class="form-group mb-2">
+        <label asp-for="FirmaId"></label>
+        <select asp-for="FirmaId" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Firmalar, "FirmaID", "FirmaUnvanı"))"></select>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="DurumID"></label>
+        <select asp-for="DurumID" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Durumlar, "durumId", "durumu"))"></select>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="teslimatadresıd"></label>
+        <select asp-for="teslimatadresıd" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Adresler, "AdresID", "Adres1"))"></select>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="SipNo"></label>
+        <input asp-for="SipNo" class="form-control" />
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="Tarih"></label>
+        <input asp-for="Tarih" class="form-control" type="date" />
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="Aciklama"></label>
+        <textarea asp-for="Aciklama" class="form-control"></textarea>
+    </div>
+
+    <hr />
+    <h5>Sipariş Detayları</h5>
+
+    @if (detaylar != null && detaylar.Any())
+    {
+        for (int i = 0; i < detaylar.Count; i++)
+        {
+            var d = detaylar[i];
+            <div class="border p-3 mb-3 rounded">
+                <input type="hidden" name="SiparisDetay[@i].SipDetID" value="@d.SipDetID" />
+
+                <div class="form-group mb-2">
+                    <label>Malzeme</label>
+                    <select name="SiparisDetay[@i].MalzemeID" class="form-control"
+                    asp-items="@(new SelectList(ViewBag.Malzemeler, "MalzemeId", "MalzemeAd", d.MalzemeID))">
+                    </select>
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>Birim</label>
+                    <select name="SiparisDetay[@i].BirimId" class="form-control"
+                    asp-items="@(new SelectList(ViewBag.Birimler, "BirimID", "BirimAd", d.BirimId))">
+                    </select>
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>Miktar</label>
+                    <input name="SiparisDetay[@i].Miktar" class="form-control" value="@d.Miktar" />
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>Fiyat</label>
+                    <input name="SiparisDetay[@i].Fiyat" class="form-control" value="@d.Fiyat" />
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>KDV</label>
+                    <input name="SiparisDetay[@i].Kdv" class="form-control" value="@d.Kdv" />
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>İndirim Oranı</label>
+                    <input name="SiparisDetay[@i].IndOran" class="form-control" value="@d.IndOran" />
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>İndirim Tutarı</label>
+                    <input name="SiparisDetay[@i].IndTutar" class="form-control" value="@d.IndTutar" />
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>Toplam</label>
+                    <input name="SiparisDetay[@i].Toplam" class="form-control" value="@d.Toplam" />
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>Toplam KDV</label>
+                    <input name="SiparisDetay[@i].ToplamKdv" class="form-control" value="@d.ToplamKdv" />
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>Genel Toplam</label>
+                    <input name="SiparisDetay[@i].GenelToplam" class="form-control" value="@d.GenelToplam" />
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Henüz sipariş detayı yok.</p>
+    }
+
+    <button type="submit" class="btn btn-success mt-2">Güncelle</button>
+</form>
+
+@section Scripts {
+    <script>
+        $("#editForm").on("submit", function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: '@Url.Action("EditPartial", "Siparis")',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (data) {
+                    alert("Sipariş başarıyla güncellendi.");
+                  
+                    location.reload();
+                },
+                error: function () {
+                    alert("Bir hata oluştu.");
+                }
+            });
+        });
+    </script>
+}

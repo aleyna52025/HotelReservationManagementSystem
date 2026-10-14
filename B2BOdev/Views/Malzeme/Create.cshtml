@@ -1,0 +1,106 @@
+﻿@model B2BOdev.Models.Malzeme
+
+@{
+    ViewData["Title"] = "Malzeme Ekle";
+}
+@using System.Text.Json
+
+<h2 class="text-primary mb-4"><i class="fas fa-plus-circle"></i> Malzeme Ekle</h2>
+
+<div class="card shadow-sm p-4">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <!-- Sol Sütun -->
+            <div class="col-md-6">
+
+                <div class="form-group mb-3">
+                    <label asp-for="MalzemeKod" class="form-label fw-bold"></label>
+                    <input asp-for="MalzemeKod" class="form-control" />
+                    <span asp-validation-for="MalzemeKod" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="MalzemeAd" class="form-label fw-bold"></label>
+                    <input asp-for="MalzemeAd" class="form-control" />
+                    <span asp-validation-for="MalzemeAd" class="text-danger small"></span>
+                </div>
+              <div class="form-group mb-3">
+
+              </div>
+                <div class="form-group mb-3">
+                    <label asp-for="MarkaId" class="form-label fw-bold">Marka</label>
+                    <select asp-for="MarkaId" class="form-control" asp-items="ViewBag.MarkaListesi"></select>
+                    <span asp-validation-for="MarkaId" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="KAtegoriId" class="form-label fw-bold">Kategori</label>
+                    <select asp-for="KAtegoriId" class="form-control" asp-items="ViewBag.KategoriListesi"></select>
+                    <span asp-validation-for="KAtegoriId" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="BirimId" class="form-label fw-bold">Birim</label>
+                    <select asp-for="BirimId" class="form-control" asp-items="ViewBag.BirimListesi"></select>
+                    <span asp-validation-for="BirimId" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Aciklama" class="form-label fw-bold"></label>
+                    <textarea asp-for="Aciklama" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Aciklama" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="SatVergiOran" class="form-label fw-bold">Satış Vergi Oranı (%)</label>
+                    <input asp-for="SatVergiOran" class="form-control" type="number" step="0.01" />
+                    <span asp-validation-for="SatVergiOran" class="text-danger small"></span>
+                </div>
+
+            </div>
+
+            <!-- Sağ Sütun -->
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="OzelKod1" class="form-label fw-bold"></label>
+                    <input asp-for="OzelKod1" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="OzelKod2" class="form-label fw-bold"></label>
+                    <input asp-for="OzelKod2" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="OzelKod3" class="form-label fw-bold"></label>
+                    <input asp-for="OzelKod3" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="OzelKod4" class="form-label fw-bold"></label>
+                    <input asp-for="OzelKod4" class="form-control" />
+                </div>
+               
+                    <div class="form-group">
+                        <label>Görsel Yolu</label>
+                        <input type="file" name="GorselDosya" class="form-control" />
+                    </div>
+                
+                <div class="form-group mb-3">
+                    <label asp-for="OzelKod5" class="form-label fw-bold"></label>
+                    <input asp-for="OzelKod5" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-success px-4">
+                <i class="fas fa-save"></i> Kaydet
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

@@ -1,0 +1,175 @@
+﻿@model IEnumerable<B2BOdev.Models.MalzemeViewModel>
+@{
+    ViewData["Title"] = "Malzemeler";
+    var userName = Context.Session.GetString("UserName");
+    var personelYetki = Context.Session.GetString("Personel");
+}
+
+<br />
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-center">Malzeme Listesi</h2>
+
+    <input type="text" id="searchInput" class="form-control w-50" placeholder="Malzeme Kodu girin" />
+</div>
+
+@if (personelYetki == "1")
+{
+    <a href="@Url.Action("Create", "Malzeme")" class="btn btn-success mb-3">
+        <i class="fas fa-plus"></i> Yeni Malzeme Ekle
+    </a>
+}
+
+<table class="table table-striped table-bordered" id="malzemetablo">
+    <thead class="table-dark">
+        <tr>
+            <th>Malzeme Kodu</th>
+            <th>Malzeme Adı</th>
+            <th>Marka Adı</th>
+            <th>Kategori Adı</th>
+            <th>Açıklama</th>
+            <th>SatVergiOr</th>
+            <th>Özel Kod1</th>
+            <th>Özel Kod2</th>
+            <th>Özel Kod3</th>
+            <th>Özel Kod4</th>
+            <th>Özel Kod5</th>
+            <th>Birim Adı</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var malzeme in Model)
+        {
+            <tr>
+                <td>@malzeme.MalzemeKod</td>
+                <td>@malzeme.MalzemeAd</td>
+                <td>@malzeme.MarkaAdi</td>
+                <td>@malzeme.KategoriAdi</td>
+                <td>@malzeme.Aciklama</td>
+                <td>@malzeme.SatVergiOr</td>
+                <td>@malzeme.OzelKod1</td>
+                <td>@malzeme.OzelKod2</td>
+                <td>@malzeme.OzelKod3</td>
+                <td>@malzeme.OzelKod4</td>
+                <td>@malzeme.OzelKod5</td>
+                <td>@malzeme.BirimAdi</td>
+                <td>
+                    @if (personelYetki == "1")
+                    {
+                        <a href="#" class="btn btn-sm btn-warning edit-birim-btn"
+                   data-url="@Url.Action("EditPartial", "Malzeme", new { id = malzeme.MalzemeId})">
+                            Düzenle
+                        </a>
+                        <a href="@Url.Action("DeleteConfirmed", "Malzeme", new { id = malzeme.MalzemeId })" class="btn btn-sm btn-danger">Sil</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-center mt-3">
+    <nav>
+        <ul class="pagination" id="pagination"></ul>
+    </nav>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editMalzemeModal" tabindex="-1" aria-labelledby="editBirimModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBirimModalLabel">Malzeme Düzenle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body" id="modalContent"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const rowsPerPage = 10;
+        let currentPage = 1;
+
+        function showPage(page) {
+            const rows = document.querySelectorAll("#malzemetablo tbody tr");
+            const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+            currentPage = page;
+            rows.forEach((row, index) => {
+                row.style.display = (index >= (page - 1) * rowsPerPage && index < page * rowsPerPage) ? "" : "none";
+            });
+
+            const pagination = document.getElementById("pagination");
+            pagination.innerHTML = "";
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement("li");
+                li.className = "page-item" + (i === page ? " active" : "");
+                li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                li.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    showPage(i);
+                });
+                pagination.appendChild(li);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            showPage(1);
+        });
+
+        // Arama
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            const input = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#malzemetablo tbody tr");
+            rows.forEach(row => {
+                const malzemeKod = row.children[0].textContent.toLowerCase();
+                row.style.display = malzemeKod.includes(input) ? "" : "none";
+            });
+        });
+
+        // Edit Modal Ajax
+        document.querySelectorAll(".edit-birim-btn").forEach(btn => {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                const url = this.getAttribute("data-url");
+
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById("modalContent").innerHTML = html;
+                        new bootstrap.Modal(document.getElementById("editMalzemeModal")).show();
+
+                        setTimeout(() => {
+                            bindEditFormSubmit();
+                        }, 100);
+                    });
+            });
+        });
+
+        function bindEditFormSubmit() {
+            const form = document.getElementById("editMalzemeForm");
+            if (!form) return;
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert("Bir hata oluştu.");
+                        }
+                    });
+            });
+        }
+    </script>
+}

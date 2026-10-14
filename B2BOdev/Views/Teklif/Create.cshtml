@@ -1,0 +1,19 @@
+﻿@model B2BOdev.Models.Teklif
+
+@{
+    ViewData["Title"] = "Yeni Teklif Oluştur";
+}
+
+<h2>Yeni Teklif</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Firma</label>
+        <select asp-for="FirmaID" asp-items="ViewBag.Firma" class="form-control"></select>
+    </div>
+    <div class="form-group">
+        <label>Açıklama</label>
+        <textarea asp-for="Aciklama" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Devam Et</button>
+</form>

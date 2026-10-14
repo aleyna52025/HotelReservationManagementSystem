@@ -1,0 +1,55 @@
+﻿@model B2BOdev.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="alert alert-info">
+            <h4>Toplam Sipariş</h4>
+            <p>@Model.ToplamSiparisSayisi adet</p>
+        </div>
+    </div>
+</div>
+
+<h4>📊 En Çok Satılan Malzemeler</h4>
+<canvas id="topMalzemelerChart" width="400" height="200"></canvas>
+
+<h4 class="mt-4">📈 Aylık Sipariş Sayısı</h4>
+<canvas id="aylikSiparisChart" width="400" height="200"></canvas>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // En Çok Satılan Malzemeler
+        var ctx1 = document.getElementById('topMalzemelerChart').getContext('2d');
+        var chart1 = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.EnCokSatilanMalzemeler.Keys)),
+                datasets: [{
+                    label: 'Satış Miktarı',
+                    data: @Html.Raw(Json.Serialize(Model.EnCokSatilanMalzemeler.Values)),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                }]
+            }
+        });
+
+        // Aylık Sipariş Sayıları
+        var ctx2 = document.getElementById('aylikSiparisChart').getContext('2d');
+        var chart2 = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.AylikSiparisSayilari.Keys)),
+                datasets: [{
+                    label: 'Sipariş Sayısı',
+                    data: @Html.Raw(Json.Serialize(Model.AylikSiparisSayilari.Values)),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    fill: true
+                }]
+            }
+        });
+    </script>
+}
